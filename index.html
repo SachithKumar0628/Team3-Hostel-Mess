@@ -3,30 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amity Hostel Mess Login Webpage</title>
-    <style>// Css styling code
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <title>Amity Hostel Mess | Login Portal</title>
+    <style>
+        /* CSS Styling */
+        :root {
+            --primary: #003366;
+            --hover: #002244;
+            --bg-light: #f5f7fa;
+            --bg-dark: #1c1c1c;
+            --text-dark: #ffffff;
+            --text-light: #000000;
+            --container-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
         }
 
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            background: linear-gradient(135deg, var(--bg-light), #c3cfe2);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: left;
+            align-items: center;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         .container {
-            background: #ffffff;
+            background: var(--container-bg);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             width: 400px;
             padding: 30px;
             border-radius: 15px;
+            transition: background 0.4s ease;
+        }
+
+        body.dark-mode .container {
+            background: #2b2b2b;
         }
 
         header {
@@ -41,7 +56,7 @@
 
         header h1 {
             font-size: 22px;
-            color: #003366;
+            color: var(--primary);
         }
 
         header h2 {
@@ -77,7 +92,7 @@
         }
 
         input:focus {
-            border-color: #003366;
+            border-color: var(--primary);
             outline: none;
         }
 
@@ -90,7 +105,7 @@
         }
 
         .options a {
-            color: #003366;
+            color: var(--primary);
             text-decoration: none;
         }
 
@@ -99,7 +114,7 @@
         }
 
         button {
-            background-color: #003366;
+            background-color: var(--primary);
             color: white;
             padding: 12px;
             border: none;
@@ -108,14 +123,23 @@
             margin-top: 20px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            position: relative;
         }
 
         button:hover {
-            background-color: #002244;
+            background-color: var(--hover);
+        }
+
+        button.loading::after {
+            content: "⏳";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .error-message {
-            color: blue;
+            color: red;
             font-size: 13px;
             margin-top: 10px;
             display: none;
@@ -130,38 +154,40 @@
         }
 
         footer {
-            text-align: right;
+            text-align: center;
             margin-top: 30px;
             font-size: 12px;
             color: #aaa;
         }
 
-        /* Responsive */
+        .toggle-mode {
+            text-align: right;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 450px) {
             .container {
                 width: 90%;
             }
-
-            header h1 {
-                font-size: 20px;
-            }
-
-            form h3 {
-                font-size: 18px;
-            }
-        } // html code
+        }
     </style>
 </head>
-<body> //html code
+<body>
     <div class="container">
         <header>
             <img src="Amity University.jpg" alt="Amity University Logo">
             <h1>Amity University</h1>
             <h2>Hostel Mess System</h2>
         </header>
+        <div class="toggle-mode">
+            <label><input type="checkbox" id="darkModeToggle"> Dark Mode</label>
+        </div>
         <main>
             <form id="loginForm">
-                <h3>Login to your amity university college account</h3>
+                <!-- Updated for Git Graph Demo -->
+                <h3>Welcome! Please Login to Your Hostel Mess Account</h3>
 
                 <label for="username">Student ID / Admin ID</label>
                 <input type="text" id="username" name="username" placeholder="Enter your ID" required>
@@ -169,30 +195,35 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
+                <label><input type="checkbox" id="showPassword"> Show Password</label>
+
                 <div class="options">
                     <label><input type="checkbox" id="rememberMe"> Remember me</label>
                     <a href="#">Forgot passkey?</a>
                 </div>
 
-                <button type="submit">Login to your account.</button>
+                <button type="submit" id="loginBtn">Login to your account</button>
 
                 <div class="error-message" id="errorMessage"></div>
 
-                <p class="info">Note: Only registered amity  students and admin can login.</p>
+                <p class="info">Note: Only registered Amity students and admins can log in.</p>
             </form>
         </main>
         <footer>
-            <p>&copy; 2025 Amity University Bengaluru. All rights reserved.</p>
+            <p>&copy; 2025 Amity University Bengaluru - Hostel Mess Management System</p>
         </footer>
     </div>
 
-    <script> //Javascript code
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             const loginForm = document.getElementById("loginForm");
             const usernameInput = document.getElementById("username");
             const passwordInput = document.getElementById("password");
             const errorMessage = document.getElementById("errorMessage");
             const rememberMe = document.getElementById("rememberMe");
+            const showPassword = document.getElementById("showPassword");
+            const darkToggle = document.getElementById("darkModeToggle");
+            const loginBtn = document.getElementById("loginBtn");
 
             loginForm.addEventListener("submit", function (e) {
                 e.preventDefault();
@@ -202,36 +233,48 @@
 
                 errorMessage.style.display = "none";
                 errorMessage.textContent = "";
+                loginBtn.classList.add("loading");
 
-                if (!username || !password) {
-                    showError("Please fill in all fields.");
-                    return;
-                }
+                setTimeout(() => {
+                    loginBtn.classList.remove("loading");
 
-                if (!validateUsername(username)) {
-                    showError("Invalid ID format.");
-                    return;
-                }
+                    if (!username || !password) {
+                        showError("Please fill in all fields.");
+                        return;
+                    }
 
-                if (password.length < 6) {
-                    showError("Password must be at least 6 characters.");
-                    return;
-                }
+                    if (!validateUsername(username)) {
+                        showError("Invalid ID format.");
+                        return;
+                    }
 
-                if (rememberMe.checked) {
-                    localStorage.setItem("savedUser", username);
-                } else {
-                    localStorage.removeItem("savedUser");
-                }
+                    if (password.length < 6) {
+                        showError("Password must be at least 6 characters.");
+                        return;
+                    }
 
-                // Simulated backend check
-                if ((username === "admin123" && password === "adminpass") ||
-                    (username === "student001" && password === "studentpass")) {
-                    alert("Login successful!");
-                    window.location.href = "dashboard.html";
-                } else {
-                    showError("Invalid username or password.");
-                }
+                    if (rememberMe.checked) {
+                        localStorage.setItem("savedUser", username);
+                    } else {
+                        localStorage.removeItem("savedUser");
+                    }
+
+                    if ((username === "admin123" && password === "adminpass") ||
+                        (username === "student001" && password === "studentpass")) {
+                        alert("Login successful!");
+                        window.location.href = "dashboard.html";
+                    } else {
+                        showError("Invalid username or password.");
+                    }
+                }, 1000);
+            });
+
+            showPassword.addEventListener("change", function () {
+                passwordInput.type = this.checked ? "text" : "password";
+            });
+
+            darkToggle.addEventListener("change", function () {
+                document.body.classList.toggle("dark-mode", this.checked);
             });
 
             function showError(message) {

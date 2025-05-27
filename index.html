@@ -161,13 +161,16 @@
         </header>
         <main>
             <form id="loginForm">
-                <h3>Login to your amity university college account</h3>
+                <h3><span style="font-size: 20px;">🔐</span> Secure Login</h3>
+
 
                 <label for="username">Student ID / Admin ID</label>
                 <input type="text" id="username" name="username" placeholder="Enter your ID" required>
 
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <label style="font-size: 12px;"><input type="checkbox" id="showPassword"> Show Password</label>
+
 
                 <div class="options">
                     <label><input type="checkbox" id="rememberMe"> Remember me</label>
@@ -243,6 +246,10 @@
                 const pattern = /^[a-zA-Z0-9]{4,20}$/;
                 return pattern.test(id);
             }
+		document.getElementById("showPassword").addEventListener("change", function () {
+                passwordInput.type = this.checked ? "text" : "password";
+                });
+ 
 
             function autoFillSavedUser() {
                 const savedUser = localStorage.getItem("savedUser");

@@ -1,4 +1,4 @@
-🍽️ Amity University Hostel Mess Management System - Login Page
+ 🍽️ Amity University Hostel Mess Management System - Login Page -signup page
 This is the Login Page for the Hostel Mess Management System designed for Amity University students. It acts as the secure gateway to access meal-related services such as daily menus, feedback, billing, and attendance tracking.
 
 📌 Features

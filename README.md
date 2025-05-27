@@ -37,3 +37,13 @@ mess-login/
 
 📮 Feedback
 If you're a student or developer with suggestions, feel free to contribute or open an issue!
+
+Team Members 🚀
+
+A big shout-out to the incredible team behind the Amity Hostel Mess Management System!
+
+• Sachith: Login Page
+
+• Ajay: Menu Page
+
+• Ashmitha: Cart and billing system
